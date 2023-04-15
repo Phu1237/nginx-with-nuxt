@@ -1,0 +1,52 @@
+version: '3'
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.nuxt
+    container_name: nuxt
+    restart: always
+    environment:
+      - CLIENT=client
+    command: "node .output/server/index.mjs"
+    volumes:
+      - ./src:/usr/local/src
+    networks:
+      - internal
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    depends_on:
+      - nuxt
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./docker/nginx/conf:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
+    ports:
+      - "80:80"
+    networks:
+      - internal
+      - external
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    container_name: mysql
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: example
+    networks:
+      - internal
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    networks:
+      - internal
+
+networks:
+  internal:
+  external:
+    external: true

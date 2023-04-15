@@ -1,0 +1,6 @@
+.env
+.env.*
+logs/*
+
+# Include all folder with .gitignore file
+!**/.gitignore
