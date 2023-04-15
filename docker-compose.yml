@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: Dockerfile.nginx
     depends_on:
-      - nuxt
+      - client
     container_name: nginx
     restart: always
     volumes:

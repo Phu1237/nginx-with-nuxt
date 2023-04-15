@@ -1,8 +1,8 @@
 FROM node:18-alpine
 WORKDIR /usr/local/src
-ENV APP_ROOT client
+ENV APP_ROOT ${CLIENT}
 RUN mkdir ${APP_ROOT}
-COPY src/${APP_ROOT} /${APP_ROOT}
+COPY src/${APP_ROOT} ${APP_ROOT}
 WORKDIR ${APP_ROOT}
 ADD . ${APP_ROOT}
 RUN yarn install
