@@ -24,13 +24,16 @@ services:
       - php
     container_name: nginx
     restart: always
+    env_file:
+      - .env
     volumes:
       - ./docker/nginx/conf:/etc/nginx/conf.d
+      - ./docker/nginx/templates:/etc/nginx/templates
       - ./src/server:/usr/share/nginx/html
       - ./logs/nginx:/var/log/nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:${NGINX_HTTP_PORT}"
+      - "443:${NGINX_HTTPS_PORT}"
     networks:
       - internal
       - external
@@ -40,8 +43,15 @@ services:
       dockerfile: Dockerfile.php
     container_name: php
     restart: always
+    ports:
+      - 8080:80
+      - 8443:443
+      - 8443:443/udp
+      - 8088:8088
+      - 7080:7080
     volumes:
-      - ./src/server:/usr/share/nginx/html
+      - ./src/server:/var/www/vhosts/localhost/html
+      - ./logs/lsws:/usr/local/lsws/logs
     networks:
       - internal
   mysql:
