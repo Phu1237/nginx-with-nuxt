@@ -6,7 +6,11 @@
 docker network create external
 ```
 
-## Start and run
+## How to use
+
+1. Duplicate the .env.example file and name it to .env
+2. Build and run the Docker
+3. Client will serve at http://localhost/ and serve at http://localhost/api/
 
 ### Build the Docker image
 
