@@ -3,11 +3,11 @@ services:
   client:
     build:
       context: .
-      dockerfile: Dockerfile.nuxt
-    container_name: nuxt
+      dockerfile: Dockerfile.client
+      args:
+        - APP_ROOT=client
+    container_name: client
     restart: always
-    environment:
-      - CLIENT=client
     command: "node .output/server/index.mjs"
     volumes:
       - ./src:/usr/local/src
@@ -17,18 +17,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nginx
+      args:
+        - APP_ROOT=server
     depends_on:
       - client
+      - php
     container_name: nginx
     restart: always
     volumes:
       - ./docker/nginx/conf:/etc/nginx/conf.d
+      - ./src/server:/usr/share/nginx/html
       - ./logs/nginx:/var/log/nginx
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - internal
       - external
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    container_name: php
+    restart: always
+    volumes:
+      - ./src/server:/usr/share/nginx/html
+    networks:
+      - internal
   mysql:
     build:
       context: .
