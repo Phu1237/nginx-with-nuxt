@@ -8,9 +8,10 @@ docker network create external
 
 ## How to use
 
-1. Duplicate the .env.example file and name it to .env
-2. Build and run the Docker
-3. Client will serve at http://localhost/ and serve at http://localhost/api/
+1. Duplicate the .env.example file and name it .env
+2. Put the source code in the src/client directory and src/server
+3. Build and run the Docker
+4. Client will serve at http://localhost/ and serve at http://localhost/api/
 
 ### Build the Docker image
 
