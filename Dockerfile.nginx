@@ -1,3 +1,4 @@
 FROM nginx:latest
+ARG APP_ROOT
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY src/server /usr/share/nginx/html
+COPY src/${APP_ROOT} /usr/share/nginx/html

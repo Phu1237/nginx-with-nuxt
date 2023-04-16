@@ -1,0 +1,41 @@
+version: '3'
+services:
+  nginx:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    depends_on:
+      - client
+      - php
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./docker/nginx/${PHP_TYPE}/conf:/etc/nginx/conf.d
+      - ./docker/nginx/${PHP_TYPE}/templates:/etc/nginx/templates
+      - ./logs/nginx:/var/log/nginx
+      - ./src/${SERVER_ROOT}:/usr/share/nginx/html
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - internal
+      - external
+  php:
+    env_file:
+      - .env
+    build:
+      context: docker/php
+      dockerfile: Dockerfile.${PHP_TYPE}
+    container_name: php
+    restart: always
+    volumes:
+      - ./src/${SERVER_ROOT}:/usr/share/nginx/html
+    networks:
+      - internal
+
+networks:
+  internal:
+  external:
+    external: true

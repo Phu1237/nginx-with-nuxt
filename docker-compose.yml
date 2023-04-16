@@ -5,59 +5,17 @@ services:
       context: .
       dockerfile: Dockerfile.client
       args:
-        - APP_ROOT=client
+        - APP_ROOT=${CLIENT_ROOT}
     container_name: client
     restart: always
     command: "node .output/server/index.mjs"
     volumes:
-      - ./src:/usr/local/src
-    networks:
-      - internal
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-      args:
-        - APP_ROOT=server
-    depends_on:
-      - client
-      - php
-    container_name: nginx
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - ./docker/nginx/conf:/etc/nginx/conf.d
-      - ./docker/nginx/templates:/etc/nginx/templates
-      - ./src/server:/usr/share/nginx/html
-      - ./logs/nginx:/var/log/nginx
-    ports:
-      - "80:${NGINX_HTTP_PORT}"
-      - "443:${NGINX_HTTPS_PORT}"
-    networks:
-      - internal
-      - external
-  php:
-    build:
-      context: .
-      dockerfile: Dockerfile.php
-    container_name: php
-    restart: always
-    ports:
-      - 8080:80
-      - 8443:443
-      - 8443:443/udp
-      - 8088:8088
-      - 7080:7080
-    volumes:
-      - ./src/server:/var/www/vhosts/localhost/html
-      - ./logs/lsws:/usr/local/lsws/logs
+      - ./src/client:/usr/local/src/client
     networks:
       - internal
   mysql:
     build:
-      context: .
-      dockerfile: Dockerfile.mysql
+      context: docker/mysql
     container_name: mysql
     restart: always
     environment:
